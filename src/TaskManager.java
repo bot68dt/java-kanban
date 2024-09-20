@@ -31,7 +31,7 @@ public class TaskManager {
         ArrayList<Object> Tasks1 = contacts.get(Types.SUBEPIC);
         ArrayList<Object> Tasks = contacts.get(Types.EPIC);
         Object epic = null;
-        ArrayList<Integer> subtasks = null;
+        ArrayList<Integer> subtasks;
         if (obj.getClass() == SUBTASK.getClass())
         {
             ((SubTask) obj).setEpicHash(epicId);
@@ -46,9 +46,9 @@ public class TaskManager {
                 }
             }
         }
+        if (((Epic)epic).getSubTasks().isEmpty())
+            ((Epic)epic).getSubTasks().add(epicId);
         subtasks = ((Epic)epic).getSubTasks();
-        if (subtasks.isEmpty())
-            subtasks.add(epicId);
         repeatedExpression2(subtasks, Tasks1, epic);
     }
 
@@ -268,7 +268,7 @@ public class TaskManager {
             case EPIC ->
             {
                 ArrayList<Object> Tasks = contacts.get(Types.EPIC);
-                ArrayList<Integer> subtasks = null;
+                ArrayList<Integer> subtasks = new ArrayList<>();
                 for (int i = 0; i < Tasks.size(); i++)
                 {
                     for (Object tsk : Tasks) {
