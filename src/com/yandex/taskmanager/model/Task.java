@@ -1,4 +1,7 @@
-package TaskTypes;
+package com.yandex.taskmanager.model;
+
+import com.yandex.taskmanager.constant.Status;
+import com.yandex.taskmanager.constant.Types;
 
 import java.util.Objects;
 
@@ -68,14 +71,9 @@ public class Task
             hash += name.hashCode();
         }
         hash = hash * 31;
-
         if (description != null)
         {
             hash += description.hashCode();
-        }
-        if (status != null)
-        {
-            hash += status.hashCode();
         }
         return hash;
     }
@@ -86,7 +84,6 @@ public class Task
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
-                ", id=" + id +
                 ", type=" + type +
                 '}'+ '\n';
     }

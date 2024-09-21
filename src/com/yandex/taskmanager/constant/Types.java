@@ -1,4 +1,4 @@
-package TaskTypes;
+package com.yandex.taskmanager.constant;
 
 public enum Types
 {

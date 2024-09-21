@@ -1,4 +1,7 @@
-package TaskTypes;
+package com.yandex.taskmanager.model;
+
+import com.yandex.taskmanager.constant.Status;
+import com.yandex.taskmanager.constant.Types;
 
 public class SubTask extends Task
 {

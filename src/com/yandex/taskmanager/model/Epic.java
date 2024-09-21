@@ -1,4 +1,7 @@
-package TaskTypes;
+package com.yandex.taskmanager.model;
+import com.yandex.taskmanager.constant.Status;
+import com.yandex.taskmanager.constant.Types;
+
 import java.util.ArrayList;
 
 public class Epic extends Task
@@ -8,7 +11,7 @@ public class Epic extends Task
     public Epic(String name, String description)
     {
         super(name, description, Status.NEW);
-        type=Types.EPIC;
+        type= Types.EPIC;
         subTasks = new ArrayList<>();
     }
 
@@ -21,13 +24,17 @@ public class Epic extends Task
         subTasks.add(subTasks1);
     }
 
-    public  void delSubTasks(int i)
+    public  void delSubTask(Integer i)
     {
         subTasks.remove(i);
     }
-    public  void setSubTasks(Integer subtask)
+    public  void delAllSubTasks()
     {
-        subTasks.add(subtask);
+        subTasks.clear();
+    }
+    public  void setSubTasks(ArrayList<Integer> subtask)
+    {
+        subTasks.addAll(subtask);
     }
 
     public  void setSubTasks(int i, Integer subtask)
