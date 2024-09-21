@@ -46,23 +46,7 @@ public class TaskManager {
                 Epic object = epics.get(epicId);
                 object.addSubTasks((subTask.getId()+count));
                 ++count;
-                int progress=0;
-                int done =0;
-                int new1 = 0;
-                for (int i : object.getSubTasks()) {
-                    SubTask sub = subtasks.get(i);
-                    switch (sub.getStatus()) {
-                        case NEW -> new1++;
-                        case IN_PROGRESS -> progress++;
-                        case DONE -> done++;
-                    }
-                }
-                if (progress > 0 || !(done == object.getSubTasks().size()))
-                    object.setStatus(Status.IN_PROGRESS);
-                else
-                    object.setStatus(Status.DONE);
-                if (new1 == object.getSubTasks().size())
-                    object.setStatus(Status.NEW);
+               repeatedExpression(object);
             }
         }
     }
