@@ -6,6 +6,7 @@ import com.yandex.taskmanager.model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TaskManager {
@@ -26,49 +27,79 @@ public class TaskManager {
 
     public void addTask(Task task)
     {
-        tasks.put((task.getId()+count),task);
-        ++count;
+        if(!(task.getName()==null || task.getName().trim().isEmpty() || task.getStatus()==null)) {
+            tasks.put((task.getId() + count), task);
+            ++count;
+        }
     }
 
     public void addEpic(Epic epic)
     {
-        epics.put(epic.getId()+count,epic);
-        ++count;
+        if(!(epic.getName()==null || epic.getName().trim().isEmpty())) {
+            epics.put(epic.getId() + count, epic);
+            ++count;
+        }
     }
 
     public void addSubTask(int epicId, SubTask subTask)
     {
-        if (!epics.isEmpty()) {
+        if (!epics.isEmpty() && !(subTask.getName()==null || subTask.getName().trim().isEmpty() || subTask.getStatus()==null)) {
             if(epics.containsKey(epicId))
             {
-                subTask.setEpicHash(epicId);
-                subtasks.put(subTask.getId()+count, subTask);
-                Epic object = epics.get(epicId);
+                Epic object = repeatedExpression2(subTask, epicId, subTask.getId()+count);
                 object.addSubTasks((subTask.getId()+count));
                 ++count;
-               repeatedExpression(object);
+                repeatedExpression(object);
             }
         }
     }
 
-    public ArrayList<Object> getAllTasks()
-    {
-        ArrayList<Object> object = new ArrayList<>();
-        object.add(epics);
-        object.add(subtasks);
-        object.add(tasks);
-        return object;
+    public List<Task> getTasks() {
+        if(!tasks.isEmpty())
+            return new ArrayList<>(tasks.values());
+        else
+            return null;
     }
 
-    public ArrayList<Object> getTasksByType(Types type) {
-        ArrayList<Object> buffer = new ArrayList<>();
-        switch (type)
-        {
-            case SIMPLE -> buffer.add(tasks);
-            case SUBEPIC -> buffer.add(subtasks);
-            case EPIC -> buffer.add(epics);
-        }
-        return buffer;
+    public List<Epic> getEpics() {
+        if (!epics.isEmpty())
+            return new ArrayList<>(epics.values());
+        else
+            return null;
+    }
+
+    public List<SubTask> getSubTasks() {
+        if (!subtasks.isEmpty())
+            return new ArrayList<>(subtasks.values());
+        else
+            return null;
+    }
+
+    public void getAll()
+    {
+        getEpics();
+        getSubTasks();
+        getTasks();
+    }
+
+    public Map<Integer, Task> getTasksWithId() {
+        if(!tasks.isEmpty())
+            return tasks;
+        else
+            return null;
+    }
+    public Map<Integer, Epic> getEpicsWithId() {
+        if(!epics.isEmpty())
+            return epics;
+        else
+            return null;
+    }
+
+    public Map<Integer, SubTask> getSubTasksWithId() {
+        if(!subtasks.isEmpty())
+            return subtasks;
+        else
+            return null;
     }
 
     public void delTasksByType(Types type) {
@@ -81,7 +112,7 @@ public class TaskManager {
                 for (Epic epic :epics.values())
                 {
                     epic.delAllSubTasks();
-                    epic.setStatus(Status.DONE);
+                    epic.setStatus(Status.NEW);
                 }
             }
             case EPIC ->
@@ -92,24 +123,25 @@ public class TaskManager {
         }
     }
 
-    public ArrayList<Object> getTasksById(int id) {
-        ArrayList<Object> buffer = new ArrayList<>();
-        if (tasks.containsKey(id))
-            buffer.add(tasks.get(id));
-        if (subtasks.containsKey(id))
-            buffer.add(subtasks.get(id));
-        if (epics.containsKey(id))
-            buffer.add(epics.get(id));
-        return buffer;
+    public Task getTaskById(int id) {
+        return tasks.getOrDefault(id, null);
+    }
+
+    public SubTask getSubTaskById(int id) {
+        return subtasks.getOrDefault(id, null);
+    }
+
+    public Epic getEpicById(int id) {
+        return epics.getOrDefault(id, null);
     }
 
     public void updateTask(int id, Task task) {
-        if (tasks.containsKey(id))
+        if (tasks.containsKey(id) && !(task.getName()==null || task.getName().trim().isEmpty() || task.getStatus()==null))
             tasks.put(id, task);
     }
 
     public void updateEpic(int id, Epic task) {
-        if (epics.containsKey(id))
+        if (epics.containsKey(id) && !(task.getName()==null || task.getName().trim().isEmpty()))
         {
             ArrayList<Integer> subs = epics.get(id).getSubTasks();
             Status status = epics.get(id).getStatus();
@@ -120,29 +152,24 @@ public class TaskManager {
     }
 
     public void updateSubEpic(int id, SubTask task) {
-        if (subtasks.containsKey(id))
+        if (subtasks.containsKey(id)&& !(task.getName()==null || task.getName().trim().isEmpty() || task.getStatus()==null))
         {
             int epicHash = subtasks.get(id).getEpicHash();
-            task.setEpicHash(epicHash);
-            subtasks.put(id, task);
-            Epic object = epics.get(epicHash);
+            Epic object = repeatedExpression2(task, epicHash, id);
             repeatedExpression(object);
         }
     }
 
     public void delTaskById(int id) {
-        if (tasks.containsKey(id))
-            tasks.remove(id);
+        tasks.remove(id);
     }
 
     public void delEpicById(int id) {
         if (epics.containsKey(id))
         {
-            ArrayList<Integer> subs = epics.get(id).getSubTasks();
+            for(int i : epics.get(id).getSubTasks())
+                subtasks.remove(i);
             epics.remove(id);
-            for(int i : subs)
-                if (subtasks.containsKey(i))
-                    subtasks.remove(i);
         }
     }
 
@@ -160,13 +187,17 @@ public class TaskManager {
         }
     }
 
-    public HashMap<Integer, SubTask> getSubsByEpicId(int id)
+    public ArrayList<SubTask> getSubsByEpicId(int id)
     {
-        HashMap<Integer, SubTask> buffer = new HashMap<>();
-        for (Map.Entry<Integer, SubTask> obj : subtasks.entrySet())
-            if (obj.getValue().getEpicHash() == id)
-                buffer.put(obj.getKey(),obj.getValue());
-        return buffer;
+        if (epics.containsKey(id)) {
+            ArrayList<SubTask> buffer = new ArrayList<>();
+            for (SubTask obj : subtasks.values())
+                if (obj.getEpicHash() == id)
+                    buffer.add(obj);
+            return buffer;
+        }
+        else
+            return null;
     }
 
     public void repeatedExpression(Epic object)
@@ -188,6 +219,13 @@ public class TaskManager {
             object.setStatus(Status.DONE);
         if (new1 == object.getSubTasks().size())
             object.setStatus(Status.NEW);
+    }
+
+    public Epic repeatedExpression2(SubTask task, int epicHash, int id)
+    {
+        task.setEpicHash(epicHash);
+        subtasks.put(id, task);
+        return epics.get(epicHash);
     }
 
     public int getCount()
