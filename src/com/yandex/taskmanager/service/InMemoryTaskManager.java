@@ -2,6 +2,8 @@ package com.yandex.taskmanager.service;
 
 import com.yandex.taskmanager.constant.Status;
 import com.yandex.taskmanager.constant.Types;
+import com.yandex.taskmanager.interfaces.HistoryManager;
+import com.yandex.taskmanager.interfaces.TaskManager;
 import com.yandex.taskmanager.model.*;
 
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TaskManager {
+public class InMemoryTaskManager implements TaskManager {
 
     private final Map<Integer, Task> tasks;
     private final Map<Integer, Epic> epics;
@@ -18,42 +20,49 @@ public class TaskManager {
 
 
 
-    public TaskManager()
+    public InMemoryTaskManager()
     {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
     }
 
+    @Override
     public void addTask(Task task)
     {
         if(!(task.getName()==null || task.getName().trim().isEmpty() || task.getStatus()==null)) {
-            tasks.put((task.getId() + count), task);
+            task.setId(task.getId() + count);
+            tasks.put((task.getId()), task);
             ++count;
         }
     }
 
+    @Override
     public void addEpic(Epic epic)
     {
         if(!(epic.getName()==null || epic.getName().trim().isEmpty())) {
-            epics.put(epic.getId() + count, epic);
+            epic.setId(epic.getId() + count);
+            epics.put(epic.getId(), epic);
             ++count;
         }
     }
 
+    @Override
     public void addSubTask(int epicId, SubTask subTask)
     {
         if (!epics.isEmpty() && !(subTask.getName()==null || subTask.getName().trim().isEmpty() || subTask.getStatus()==null)) {
             if(epics.containsKey(epicId))
             {
-                Epic object = repeatedExpression2(subTask, epicId, subTask.getId()+count);
-                object.addSubTasks((subTask.getId()+count));
+                subTask.setId(subTask.getId()+count);
+                Epic object = repeatedExpression2(subTask, epicId, subTask.getId());
+                object.addSubTasks(subTask.getId());
                 ++count;
                 repeatedExpression(object);
             }
         }
     }
 
+    @Override
     public List<Task> getTasks() {
         if(!tasks.isEmpty())
             return new ArrayList<>(tasks.values());
@@ -61,6 +70,7 @@ public class TaskManager {
             return null;
     }
 
+    @Override
     public List<Epic> getEpics() {
         if (!epics.isEmpty())
             return new ArrayList<>(epics.values());
@@ -68,6 +78,7 @@ public class TaskManager {
             return null;
     }
 
+    @Override
     public List<SubTask> getSubTasks() {
         if (!subtasks.isEmpty())
             return new ArrayList<>(subtasks.values());
@@ -75,6 +86,7 @@ public class TaskManager {
             return null;
     }
 
+    @Override
     public void getAll()
     {
         getEpics();
@@ -82,12 +94,14 @@ public class TaskManager {
         getTasks();
     }
 
+    @Override
     public Map<Integer, Task> getTasksWithId() {
         if(!tasks.isEmpty())
             return tasks;
         else
             return null;
     }
+    @Override
     public Map<Integer, Epic> getEpicsWithId() {
         if(!epics.isEmpty())
             return epics;
@@ -95,6 +109,7 @@ public class TaskManager {
             return null;
     }
 
+    @Override
     public Map<Integer, SubTask> getSubTasksWithId() {
         if(!subtasks.isEmpty())
             return subtasks;
@@ -102,6 +117,7 @@ public class TaskManager {
             return null;
     }
 
+    @Override
     public void delTasksByType(Types type) {
         switch (type)
         {
@@ -123,23 +139,29 @@ public class TaskManager {
         }
     }
 
+    @Override
     public Task getTaskById(int id) {
         return tasks.getOrDefault(id, null);
     }
 
+    @Override
     public SubTask getSubTaskById(int id) {
         return subtasks.getOrDefault(id, null);
     }
 
+    @Override
     public Epic getEpicById(int id) {
         return epics.getOrDefault(id, null);
     }
 
+    @Override
     public void updateTask(int id, Task task) {
         if (tasks.containsKey(id) && !(task.getName()==null || task.getName().trim().isEmpty() || task.getStatus()==null))
+            task.setId(id);
             tasks.put(id, task);
     }
 
+    @Override
     public void updateEpic(int id, Epic task) {
         if (epics.containsKey(id) && !(task.getName()==null || task.getName().trim().isEmpty()))
         {
@@ -147,23 +169,28 @@ public class TaskManager {
             Status status = epics.get(id).getStatus();
             task.setStatus(status);
             task.setSubTasks(subs);
+            task.setId(id);
             epics.put(id, task);
         }
     }
 
+    @Override
     public void updateSubEpic(int id, SubTask task) {
         if (subtasks.containsKey(id)&& !(task.getName()==null || task.getName().trim().isEmpty() || task.getStatus()==null))
         {
             int epicHash = subtasks.get(id).getEpicHash();
+            task.setId(id);
             Epic object = repeatedExpression2(task, epicHash, id);
             repeatedExpression(object);
         }
     }
 
+    @Override
     public void delTaskById(int id) {
         tasks.remove(id);
     }
 
+    @Override
     public void delEpicById(int id) {
         if (epics.containsKey(id))
         {
@@ -173,6 +200,7 @@ public class TaskManager {
         }
     }
 
+    @Override
     public void delSubEpicById(int id) {
         if (subtasks.containsKey(id))
         {
@@ -187,6 +215,7 @@ public class TaskManager {
         }
     }
 
+    @Override
     public ArrayList<SubTask> getSubsByEpicId(int id)
     {
         if (epics.containsKey(id)) {
@@ -228,6 +257,8 @@ public class TaskManager {
         return epics.get(epicHash);
     }
 
+    @Override
     public int getCount()
     {return count;}
+
 }

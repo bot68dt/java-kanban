@@ -1,7 +1,7 @@
 # java-kanban
 Repository for homework project.
 
-# Функции com.yandex.taskmanager.service.TaskManager:
+# Функции com.yandex.taskmanager.service.InMemoryTaskManager:
 В функциях сознательно добавлял поле типа задачи, чтобы облегчить код. Одна переменная убирает
 необходимость писать кейс из трёх условий на проверку типа
 
@@ -14,7 +14,7 @@ addEpic(Object obj, ArrayList<Object> objs) - добавить эпик и сп�
 obj - задача типа Epic
 objs - список подзадач типа Subtask
 
-getAllTasks() - вывод всех задач в com.yandex.taskmanager.service.TaskManager
+getAllTasks() - вывод всех задач в com.yandex.taskmanager.service.InMemoryTaskManager
 
 getTasksByType(Types type) - вывод задач по их типу: EPIC, SUBEPIC, SIMPLE
 

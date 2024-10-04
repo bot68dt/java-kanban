@@ -10,7 +10,7 @@ public class Task
     private final String name;
     private final String description;
     private Status status;
-    private final int id;
+    private int id;
     protected Types type;
 
     public Task(String name, String description, Status status)
@@ -45,6 +45,11 @@ public class Task
     public int getId()
     {
         return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
     }
 
     public Types getType()
