@@ -1,5 +1,6 @@
 package com.yandex;
 import com.yandex.taskmanager.constant.Status;
+import com.yandex.taskmanager.constant.Types;
 import com.yandex.taskmanager.interfaces.HistoryManager;
 import com.yandex.taskmanager.model.Epic;
 import com.yandex.taskmanager.model.SubTask;
@@ -31,6 +32,7 @@ public class Main
         taskManager.updateTask(1626573414, new Task("Поспать","Полежать на кровати", Status.DONE));
         taskManager.updateEpic(1924674558, new Epic("Пройти теорию 4-ого спринта","Раньше недели"));
         taskManager.updateSubEpic(1626573417, new SubTask("Поспать","Полежать на кровати", Status.DONE));
+
         System.out.println(taskManager.getEpicsWithId());
         System.out.println(taskManager.getSubTasksWithId());
         System.out.println(taskManager.getTasksWithId());
@@ -38,6 +40,7 @@ public class Main
         System.out.println(taskManager.getSubsByEpicId(1924674558));
         taskManager.delSubEpicById(1509758710);
         System.out.println(taskManager.getCount());
+
         historyManager.add(taskManager.getTaskById(-866394938));
         historyManager.add(taskManager.getTaskById(1626573414));
         historyManager.add(taskManager.getTaskById(1626573414));

@@ -1,4 +1,4 @@
-package com.yandex.taskmanager.test;
+package com.yandex.test.model;
 
 import com.yandex.taskmanager.model.Epic;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,6 @@ class EpicTest {
         Epic task1 = new Epic("Test addNewTask", "Test addNewTask description");
         Epic task2 = new Epic("Test addNewTask", "Test addNewTask description");
         assertEquals(task1.getId(), task2.getId(), "Задачи не совпадают.");
-        assertTrue(task1.equals(task2),"Задачи не совпадают.");
+        assertEquals(task1, task2, "Задачи не совпадают.");
     }
 }

@@ -1,4 +1,4 @@
-package com.yandex.taskmanager.test;
+package com.yandex.test.service;
 
 import com.yandex.taskmanager.constant.Status;
 import com.yandex.taskmanager.model.Epic;
@@ -26,9 +26,9 @@ class InMemoryTaskManagerTest {
 
     @Test
     void addGetTasks() {
-        assertTrue(taskManager.getTaskById(task2.getId()).equals(task2),"Задачи не совпадают.");
-        assertTrue(taskManager.getEpicById(task1.getId()).equals(task1),"Задачи не совпадают.");
-        assertTrue(taskManager.getSubTaskById(task3.getId()).equals(task3),"Задачи не совпадают.");
+        assertEquals(taskManager.getTaskById(task2.getId()), task2, "Задачи не совпадают.");
+        assertEquals(taskManager.getEpicById(task1.getId()), task1, "Задачи не совпадают.");
+        assertEquals(taskManager.getSubTaskById(task3.getId()), task3, "Задачи не совпадают.");
     }
 
     @Test
@@ -49,7 +49,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     void allIdsAreUnique() {
-        assertTrue(taskManager.getCount()-1==(taskManager.getEpics().size()+taskManager.getTasks().size()+taskManager.getSubTasks().size()), "Not all id's are unique");
+        assertEquals(taskManager.getCount() - 1, (taskManager.getEpics().size() + taskManager.getTasks().size() + taskManager.getSubTasks().size()), "Not all id's are unique");
     }
 
     @Test

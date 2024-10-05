@@ -1,4 +1,4 @@
-package com.yandex.taskmanager.test;
+package com.yandex;
 
 import com.yandex.taskmanager.constant.Status;
 import com.yandex.taskmanager.interfaces.HistoryManager;

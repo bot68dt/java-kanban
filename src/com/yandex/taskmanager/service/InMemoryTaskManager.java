@@ -2,7 +2,6 @@ package com.yandex.taskmanager.service;
 
 import com.yandex.taskmanager.constant.Status;
 import com.yandex.taskmanager.constant.Types;
-import com.yandex.taskmanager.interfaces.HistoryManager;
 import com.yandex.taskmanager.interfaces.TaskManager;
 import com.yandex.taskmanager.model.*;
 
@@ -54,10 +53,10 @@ public class InMemoryTaskManager implements TaskManager {
             if(epics.containsKey(epicId))
             {
                 subTask.setId(subTask.getId()+count);
-                Epic object = repeatedExpression2(subTask, epicId, subTask.getId());
+                Epic object = changeSubsInEpic(subTask, epicId, subTask.getId());
                 object.addSubTasks(subTask.getId());
                 ++count;
-                repeatedExpression(object);
+                changeEpicStatus(object);
             }
         }
     }
@@ -67,7 +66,7 @@ public class InMemoryTaskManager implements TaskManager {
         if(!tasks.isEmpty())
             return new ArrayList<>(tasks.values());
         else
-            return null;
+            return new ArrayList<>();
     }
 
     @Override
@@ -75,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!epics.isEmpty())
             return new ArrayList<>(epics.values());
         else
-            return null;
+            return new ArrayList<>();
     }
 
     @Override
@@ -83,7 +82,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!subtasks.isEmpty())
             return new ArrayList<>(subtasks.values());
         else
-            return null;
+            return new ArrayList<>();
     }
 
     @Override
@@ -99,14 +98,14 @@ public class InMemoryTaskManager implements TaskManager {
         if(!tasks.isEmpty())
             return tasks;
         else
-            return null;
+            return new HashMap<>();
     }
     @Override
     public Map<Integer, Epic> getEpicsWithId() {
         if(!epics.isEmpty())
             return epics;
         else
-            return null;
+            return new HashMap<>();
     }
 
     @Override
@@ -114,7 +113,7 @@ public class InMemoryTaskManager implements TaskManager {
         if(!subtasks.isEmpty())
             return subtasks;
         else
-            return null;
+            return new HashMap<>();
     }
 
     @Override
@@ -141,17 +140,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        return tasks.getOrDefault(id, null);
+        return tasks.getOrDefault(id, new Task(null,null,null));
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        return subtasks.getOrDefault(id, null);
+        return subtasks.getOrDefault(id, new SubTask(null, null, null));
     }
 
     @Override
     public Epic getEpicById(int id) {
-        return epics.getOrDefault(id, null);
+        return epics.getOrDefault(id, new Epic(null, null));
     }
 
     @Override
@@ -180,8 +179,8 @@ public class InMemoryTaskManager implements TaskManager {
         {
             int epicHash = subtasks.get(id).getEpicHash();
             task.setId(id);
-            Epic object = repeatedExpression2(task, epicHash, id);
-            repeatedExpression(object);
+            Epic object = changeSubsInEpic(task, epicHash, id);
+            changeEpicStatus(object);
         }
     }
 
@@ -209,7 +208,7 @@ public class InMemoryTaskManager implements TaskManager {
             epics.get(epicHash).delSubTask(id);
             Epic object = epics.get(epicHash);
             if(!object.getSubTasks().isEmpty())
-                repeatedExpression(object);
+                changeEpicStatus(object);
             else
                 object.setStatus(Status.DONE);
         }
@@ -226,10 +225,10 @@ public class InMemoryTaskManager implements TaskManager {
             return buffer;
         }
         else
-            return null;
+            return new ArrayList<>();
     }
 
-    public void repeatedExpression(Epic object)
+    public void changeEpicStatus(Epic object)
     {
         int progress = 0;
         int done = 0;
@@ -250,7 +249,7 @@ public class InMemoryTaskManager implements TaskManager {
             object.setStatus(Status.NEW);
     }
 
-    public Epic repeatedExpression2(SubTask task, int epicHash, int id)
+    public Epic changeSubsInEpic(SubTask task, int epicHash, int id)
     {
         task.setEpicHash(epicHash);
         subtasks.put(id, task);
