@@ -5,16 +5,14 @@ import com.yandex.taskmanager.constant.Types;
 
 import java.util.Objects;
 
-public class Task
-{
+public class Task {
     private final String name;
     private final String description;
     private Status status;
     private int id;
     protected Types type;
 
-    public Task(String name, String description, Status status)
-    {
+    public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -22,38 +20,31 @@ public class Task
         type = Types.SIMPLE;
     }
 
-    public Status getStatus()
-    {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status)
-    {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public void setId(int id)
-    {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Types getType()
-    {
+    public Types getType() {
         return type;
     }
 
@@ -68,28 +59,25 @@ public class Task
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = 2;
-        if (name != null)
-        {
+        if (name != null) {
             hash += name.hashCode();
         }
         hash = hash * 31;
-        if (description != null)
-        {
+        if (description != null) {
             hash += description.hashCode();
         }
         return hash;
     }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Task{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 ", type=" + type +
-                '}'+ '\n';
+                '}' + '\n';
     }
 }

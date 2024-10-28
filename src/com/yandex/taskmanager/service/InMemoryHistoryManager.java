@@ -24,7 +24,7 @@ public class InMemoryHistoryManager implements HistoryManager {
                 && !task.equals(new SubTask(null, null, null))) {
 
             node = doublyLinkedList.LinkLast(task);
-            if(node!=null)
+            if (node != null)
                 tasks.put(task.getId(), node);
         }
     }
@@ -35,13 +35,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void remove(int id){
+    public void remove(int id) {
         DoublyLinkedList.Node n = tasks.remove(id);
         doublyLinkedList.removeNode(n);
     }
 
-    public Map<Integer,DoublyLinkedList.Node> getMapHistory() {
-            return Map.copyOf(tasks);
+    public Map<Integer, DoublyLinkedList.Node> getMapHistory() {
+        return Map.copyOf(tasks);
     }
 
     public static class DoublyLinkedList<T extends Task> {
@@ -54,32 +54,31 @@ public class InMemoryHistoryManager implements HistoryManager {
             Node node = null;
             final Node<T> newNode = new Node<>(tail, task, null);
             final Node<T> oldTail = tail;
-            if(size!=0 && task != null) {
+            if (size != 0 && task != null) {
                 Node n = head;
                 for (int i = 0; i < size; i++) {
-                    if (n.data.equals(task) && n.next!=null) {
-                        if (n.prev==null && size!=1){
+                    if (n.data.equals(task) && n.next != null) {
+                        if (n.prev == null && size != 1) {
                             final Node<T> newHead = head.next;
-                            newHead.prev=null;
+                            newHead.prev = null;
                             head = newHead;
                         }
-                        if(n.prev!=null && n.next!=null){
+                        if (n.prev != null && n.next != null) {
                             final Node oldPrev = n.prev;
                             final Node oldNext = n.next;
-                            oldPrev.next=oldNext;
-                            oldNext.prev=oldPrev;
+                            oldPrev.next = oldNext;
+                            oldNext.prev = oldPrev;
                         }
                         oldTail.next = newNode;
-                        tail=newNode;
-                        noElem=false;
+                        tail = newNode;
+                        noElem = false;
                         node = newNode;
-                    }
-                    else if (task.equals(n.data) && n.next==null)
-                        noElem=false;
-                    n=n.next;
+                    } else if (task.equals(n.data) && n.next == null)
+                        noElem = false;
+                    n = n.next;
                 }
             }
-            if (noElem){
+            if (noElem) {
                 tail = newNode;
                 if (oldTail == null)
                     head = newNode;
@@ -101,7 +100,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         private List<Task> getTasks() {
             List a = new ArrayList<Task>();
             Node b = head;
-            for (int i =0; i<size; i++){
+            for (int i = 0; i < size; i++) {
                 a.add(b.data);
                 b = b.next;
             }
@@ -109,21 +108,21 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         private void removeNode(Node n) {
-            if (n != null && size>1) {
-                if (n.prev==null && n.next!=null) {
-                    head=n.next;
-                }else if(n.next==null && n.prev!=null){
-                    tail=n.prev;
-                }else if(n.next!=null && n.prev!=null){
-                    n.prev.next=n.next;
-                    n.next.prev=n.prev;
+            if (n != null && size > 1) {
+                if (n.prev == null && n.next != null) {
+                    head = n.next;
+                } else if (n.next == null && n.prev != null) {
+                    tail = n.prev;
+                } else if (n.next != null && n.prev != null) {
+                    n.prev.next = n.next;
+                    n.next.prev = n.prev;
                 }
                 size--;
             }
-            if (n != null && size==1 && n.next==null && n.prev==null) {
-                head=null;
-                tail =null;
-                size=0;
+            if (n != null && size == 1 && n.next == null && n.prev == null) {
+                head = null;
+                tail = null;
+                size = 0;
             }
         }
 
@@ -137,15 +136,15 @@ public class InMemoryHistoryManager implements HistoryManager {
                 this.next = next;
                 this.prev = prev;
             }
+
             @Override
-            public String toString()
-            {
+            public String toString() {
                 return "Task{" +
                         "name='" + this.data.getName() + '\'' +
                         ", description='" + this.data.getDescription() + '\'' +
                         ", status=" + this.data.getStatus() +
                         ", type=" + this.data.getType() +
-                        '}'+ '\n';
+                        '}' + '\n';
             }
         }
     }
