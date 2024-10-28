@@ -17,7 +17,7 @@ class MainTest {
     Task task2 = new Task("Test addNewTask", "Test addNewTask description", Status.DONE);
 
     @Test
-    void HistoryManagerSavesPreviousVersions() {
+    void historyManagerSavesPreviousVersions() {
         taskManager.addTask(task1);
         historyManager.add(taskManager.getTaskById(task1.getId()));
         taskManager.updateTask(task1.getId(), task2);
@@ -27,7 +27,7 @@ class MainTest {
     }
 
     @Test
-    void HistoryManagerUsesRemove() {
+    void historyManagerUsesRemove() {
         taskManager.addTask(task1);
         historyManager.add(taskManager.getTaskById(task1.getId()));
         historyManager.remove(task1.getId());

@@ -53,7 +53,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void TasksDontChangeDuringAdd() {
+    void tasksDontChangeDuringAdd() {
 
         Task task7 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
         SubTask task8 = new SubTask("Test addNewTask", "Test addNewTask description", Status.NEW);
