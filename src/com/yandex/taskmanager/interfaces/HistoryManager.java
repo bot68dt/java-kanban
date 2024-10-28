@@ -1,7 +1,6 @@
 package com.yandex.taskmanager.interfaces;
 
 import com.yandex.taskmanager.model.Task;
-import com.yandex.taskmanager.service.InMemoryHistoryManager;
 
 import java.util.List;
 

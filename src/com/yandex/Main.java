@@ -1,12 +1,10 @@
 package com.yandex;
 
 import com.yandex.taskmanager.constant.Status;
-import com.yandex.taskmanager.constant.Types;
 import com.yandex.taskmanager.interfaces.HistoryManager;
 import com.yandex.taskmanager.model.Epic;
 import com.yandex.taskmanager.model.SubTask;
 import com.yandex.taskmanager.model.Task;
-import com.yandex.taskmanager.service.InMemoryHistoryManager;
 import com.yandex.taskmanager.service.Managers;
 import com.yandex.taskmanager.interfaces.TaskManager;
 
