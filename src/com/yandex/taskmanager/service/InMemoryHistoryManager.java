@@ -23,7 +23,7 @@ public class InMemoryHistoryManager implements HistoryManager {
                 && !task.equals(new Task(null, null, null))
                 && !task.equals(new SubTask(null, null, null))) {
 
-            node = doublyLinkedList.LinkLast(task);
+            node = doublyLinkedList.linkLast(task);
             if (node != null)
                 tasks.put(task.getId(), node);
         }
@@ -49,7 +49,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         private Node<T> tail = null;
         int size = 0;
 
-        private Node LinkLast(T task) {
+        private Node linkLast(T task) {
             boolean noElem = true;
             Node node = null;
             final Node<T> newNode = new Node<>(tail, task, null);
