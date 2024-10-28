@@ -1,5 +1,3 @@
-package com.yandex;
-
 import com.yandex.taskmanager.constant.Status;
 import com.yandex.taskmanager.interfaces.HistoryManager;
 import com.yandex.taskmanager.interfaces.TaskManager;

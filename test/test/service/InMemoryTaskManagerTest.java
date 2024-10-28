@@ -1,4 +1,4 @@
-package com.yandex.test.service;
+package test.service;
 
 import com.yandex.taskmanager.constant.Status;
 import com.yandex.taskmanager.model.Epic;
