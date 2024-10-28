@@ -45,11 +45,11 @@ public interface TaskManager
 
     void updateSubEpic(int id, SubTask task);
 
-    void delTaskById(int id);
+    int delTaskById(int id);
 
-    void delEpicById(int id);
+    int delEpicById(int id);
 
-    void delSubEpicById(int id);
+    int delSubEpicById(int id);
 
     ArrayList<SubTask> getSubsByEpicId(int id);
 

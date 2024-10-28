@@ -5,6 +5,7 @@ import com.yandex.taskmanager.interfaces.HistoryManager;
 import com.yandex.taskmanager.model.Epic;
 import com.yandex.taskmanager.model.SubTask;
 import com.yandex.taskmanager.model.Task;
+import com.yandex.taskmanager.service.InMemoryHistoryManager;
 import com.yandex.taskmanager.service.Managers;
 import com.yandex.taskmanager.interfaces.TaskManager;
 
@@ -12,10 +13,9 @@ public class Main
 {
     public static void main(String[] args)
     {
-        Managers managers = new Managers();
 
-        TaskManager taskManager = managers.getDefault();
-        HistoryManager historyManager = managers.getDefaultHistory();
+        TaskManager taskManager = Managers.getDefault();
+        HistoryManager historyManager = Managers.getDefaultHistory();
 
         taskManager.addTask(new Task("Поспать","Полежать на кровати", Status.IN_PROGRESS));
         taskManager.addTask(new Task("Покушать",null, Status.NEW));
@@ -53,6 +53,11 @@ public class Main
         historyManager.add(taskManager.getTaskById(1626573414));
         historyManager.add(taskManager.getSubTaskById(1626573417));
         historyManager.add(taskManager.getEpicById(1924674558));
+
+        printAllTasks(taskManager, historyManager);
+
+        historyManager.remove(taskManager.delTaskById(1626573414));
+        historyManager.remove(taskManager.delEpicById(1924674558));
         printAllTasks(taskManager, historyManager);
     }
 
