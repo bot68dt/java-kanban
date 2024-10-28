@@ -4,12 +4,12 @@ import com.yandex.taskmanager.interfaces.HistoryManager;
 import com.yandex.taskmanager.interfaces.TaskManager;
 
 public class Managers {
-    TaskManager taskManager;
-    static HistoryManager historyManager;
+    private static TaskManager taskManager;
+    private static HistoryManager historyManager;
 
-    public TaskManager getDefault()
+    public static TaskManager getDefault()
     {
-        return this.taskManager = new InMemoryTaskManager();
+        return taskManager = new InMemoryTaskManager();
     }
 
     public static HistoryManager getDefaultHistory()
