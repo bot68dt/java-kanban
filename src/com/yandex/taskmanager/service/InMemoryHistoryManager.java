@@ -3,8 +3,6 @@ package com.yandex.taskmanager.service;
 import java.util.*;
 
 import com.yandex.taskmanager.interfaces.HistoryManager;
-import com.yandex.taskmanager.model.Epic;
-import com.yandex.taskmanager.model.SubTask;
 import com.yandex.taskmanager.model.Task;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -18,14 +16,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void add(Task task) {
         DoublyLinkedList.Node node;
-        if (task != null
-                && !task.equals(new Epic(null, null))
-                && !task.equals(new Task(null, null, null))
-                && !task.equals(new SubTask(null, null, null))) {
-
+        if (task != null && task.getId() != 0) {
             node = doublyLinkedList.linkLast(task);
-            if (node != null)
-                tasks.put(task.getId(), node);
+            if (node != null) tasks.put(task.getId(), node);
         }
     }
 
@@ -49,6 +42,32 @@ public class InMemoryHistoryManager implements HistoryManager {
         private Node<T> tail = null;
         int size = 0;
 
+        private Node moveNodeToTail(Node<T> newNode, Node<T> oldTail) {
+            Node node;
+            tail = newNode;
+            if (oldTail == null) head = newNode;
+            else oldTail.next = newNode;
+            node = newNode;
+            return node;
+        }
+
+        private void addNewNodeInHead(Node<T> n) {
+            if (n.prev == null && size != 1) {
+                final Node<T> newHead = head.next;
+                newHead.prev = null;
+                this.head = newHead;
+            }
+        }
+
+        private void addNewNodeInBetween(Node<T> n) {
+            if (n.prev != null && n.next != null) {
+                final Node oldPrev = n.prev;
+                final Node oldNext = n.next;
+                oldPrev.next = oldNext;
+                oldNext.prev = oldPrev;
+            }
+        }
+
         private Node linkLast(T task) {
             boolean noElem = true;
             Node node = null;
@@ -58,42 +77,24 @@ public class InMemoryHistoryManager implements HistoryManager {
                 Node n = head;
                 for (int i = 0; i < size; i++) {
                     if (n.data.equals(task) && n.next != null) {
-                        if (n.prev == null && size != 1) {
-                            final Node<T> newHead = head.next;
-                            newHead.prev = null;
-                            head = newHead;
-                        }
-                        if (n.prev != null && n.next != null) {
-                            final Node oldPrev = n.prev;
-                            final Node oldNext = n.next;
-                            oldPrev.next = oldNext;
-                            oldNext.prev = oldPrev;
-                        }
-                        oldTail.next = newNode;
-                        tail = newNode;
+                        addNewNodeInHead(n);
+                        addNewNodeInBetween(n);
+                        node = moveNodeToTail(newNode, oldTail);
                         noElem = false;
-                        node = newNode;
-                    } else if (task.equals(n.data) && n.next == null)
-                        noElem = false;
+                    } else if (task.equals(n.data) && n.next == null) noElem = false;
                     n = n.next;
                 }
             }
             if (noElem) {
-                tail = newNode;
-                if (oldTail == null)
-                    head = newNode;
-                else
-                    oldTail.next = newNode;
+                node = moveNodeToTail(newNode, oldTail);
                 size++;
-                node = newNode;
             }
             return node;
         }
 
         private T getLast() {
             final Node<T> curTail = tail;
-            if (curTail == null)
-                throw new NoSuchElementException();
+            if (curTail == null) throw new NoSuchElementException();
             return tail.data;
         }
 
@@ -139,12 +140,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
             @Override
             public String toString() {
-                return "Task{" +
-                        "name='" + this.data.getName() + '\'' +
-                        ", description='" + this.data.getDescription() + '\'' +
-                        ", status=" + this.data.getStatus() +
-                        ", type=" + this.data.getType() +
-                        '}' + '\n';
+                return "Task{" + "name='" + this.data.getName() + '\'' + ", description='" + this.data.getDescription() + '\'' + ", status=" + this.data.getStatus() + ", type=" + this.data.getType() + '}' + '\n';
             }
         }
     }
