@@ -3,7 +3,6 @@ package com.yandex.taskmanager.service;
 import com.yandex.taskmanager.interfaces.HistoryManager;
 import com.yandex.taskmanager.interfaces.TaskManager;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
