@@ -4,7 +4,6 @@ import com.yandex.taskmanager.constant.Status;
 import com.yandex.taskmanager.constant.Types;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Epic extends Task {
     private ArrayList<Integer> subTasks;
