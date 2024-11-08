@@ -5,15 +5,11 @@ import com.yandex.taskmanager.model.Task;
 import com.yandex.taskmanager.service.Managers;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class MainTest {
+class MainTestFromFile {
 
-    TaskManager taskManager = Managers.getFileManager();
+    TaskManager taskManager = Managers.loadFileManager("testFile.CSV");
     HistoryManager historyManager = Managers.getDefaultHistory();
     Task task1 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
     Task task2 = new Task("Test addNewTask", "Test addNewTask description", Status.DONE);
@@ -34,11 +30,5 @@ class MainTest {
         historyManager.add(taskManager.getTaskById(task1.getId()));
         historyManager.remove(task1.getId());
         assertEquals(historyManager.getHistory().isEmpty(), true, "Node wasn't deleted");
-    }
-
-    @Test
-    void taskFileExists() {
-        final String HOME = System.getProperty("user.home");
-        assertTrue(Files.exists(Paths.get(HOME, "Saves", "testFile.CSV")));
     }
 }

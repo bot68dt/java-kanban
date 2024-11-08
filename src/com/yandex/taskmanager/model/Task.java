@@ -53,9 +53,7 @@ public class Task {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Task task = (Task) obj;
-        return Objects.equals(name, task.name) &&
-                Objects.equals(description, task.description) &&
-                Objects.equals(status, task.status);
+        return Objects.equals(name, task.name) && Objects.equals(description, task.description) && Objects.equals(status, task.status);
     }
 
     @Override
@@ -73,11 +71,10 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", type=" + type +
-                '}' + '\n';
+        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", status=" + status + ", type=" + type + '}' + '\n';
+    }
+
+    public String toStringForFile() {
+        return id + "," + type + "," + name + "," + status + "," + description;
     }
 }

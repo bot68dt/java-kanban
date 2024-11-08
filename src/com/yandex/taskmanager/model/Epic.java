@@ -4,6 +4,7 @@ import com.yandex.taskmanager.constant.Status;
 import com.yandex.taskmanager.constant.Types;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Epic extends Task {
     private ArrayList<Integer> subTasks;
@@ -48,5 +49,10 @@ public class Epic extends Task {
         return "Epic{" +
                 "subTasks=" + subTasks +
                 "} " + super.toString();
+    }
+
+    @Override
+    public String toStringForFile() {
+        return super.toStringForFile() + "," + subTasks;
     }
 }

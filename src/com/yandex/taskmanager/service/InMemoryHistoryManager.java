@@ -9,6 +9,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, DoublyLinkedList.Node> tasks;
     private final DoublyLinkedList<Task> doublyLinkedList = new DoublyLinkedList<>();
 
+
     public InMemoryHistoryManager() {
         tasks = new HashMap<>();
     }

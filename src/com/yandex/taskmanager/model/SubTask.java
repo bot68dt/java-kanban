@@ -26,4 +26,8 @@ public class SubTask extends Task {
                 "} " + super.toString();
     }
 
+    @Override
+    public String toStringForFile() {
+        return super.toStringForFile() + "," + epicHash;
+    }
 }
