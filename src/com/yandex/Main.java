@@ -67,10 +67,9 @@ public class Main {
         System.out.println("Эпики:");
         for (Task epic : manager.getEpics()) {
             System.out.println(epic);
-            if (manager.getSubsByEpicId(epic.getId()) != null)
-                for (Task task : manager.getSubsByEpicId(epic.getId())) {
-                    System.out.println("--> " + task);
-                }
+            if (manager.getSubsByEpicId(epic.getId()) != null) for (Task task : manager.getSubsByEpicId(epic.getId())) {
+                System.out.println("--> " + task);
+            }
         }
         System.out.println("Подзадачи:");
         for (Task subtask : manager.getSubTasks()) {

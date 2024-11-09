@@ -11,10 +11,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
+
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
@@ -23,6 +26,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     private final Map<Integer, SubTask> subtasks;
     private int count = 1;
     private static final String HOME = System.getProperty("user.home");
+    static Logger logger;
+    static FileHandler fh;
 
     public FileBackedTaskManager() {
         tasks = new HashMap<>();
@@ -34,6 +39,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
+        logger = Logger.getLogger(FileBackedTaskManager.class.getName());
+        try {
+            String pattern = "yyyyMMddhhmmss";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String date = simpleDateFormat.format(new Date());
+            fh = new FileHandler("MyLogFile_" + date + ".log", true);
+            logger.addHandler(fh);
+            fh.setFormatter(new SimpleFormatter());
+            logger.info("Log message");
+        } catch (SecurityException | IOException e) {
+            logger.log(Level.SEVERE, "Произошла ошибка при работе с FileHandler.", e);
+        }
+
 
         List<String> list = readWordsFromFile(file.toString());
         for (String str : list) {
@@ -133,7 +151,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 object.addSubTasks(subTask.getId());
                 ++count;
                 changeEpicStatus(object);
-                save(object);
                 save(subTask);
             }
         }
@@ -167,7 +184,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             task.setId(id);
             Epic object = changeSubsInEpic(task, epicHash, id);
             changeEpicStatus(object);
-            save(object);
             save(task);
         }
     }
@@ -263,6 +279,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         if (progress > 0 || !(done == object.getSubTasks().size())) object.setStatus(Status.IN_PROGRESS);
         else object.setStatus(Status.DONE);
         if (new1 == object.getSubTasks().size()) object.setStatus(Status.NEW);
+        save(object);
     }
 
     @Override
@@ -292,9 +309,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 writeListToFile(list2, testFile.toString(), false);
             } else writeListToFile(list, testFile.toString(), true);
         } catch (IOException e) {
-            e.initCause(new ManagerSaveException());
-            System.out.println("Перехвачено исключение: " + e);
-            System.out.println("Причина: " + e.getCause());
+            e.initCause(new ManagerSaveException("Критическая ошибка при работе с файлом задач"));
+            logger.log(Level.SEVERE, "Перехвачено исключение: ", e);
+            logger.log(Level.SEVERE, "Причина: ", e.getCause());
+            fh.close();
         }
     }
 
@@ -303,9 +321,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             for (String str : list)
                 out.write(str + "\n");
         } catch (IOException e) {
-            e.initCause(new ManagerSaveException());
-            System.out.println("Перехвачено исключение: " + e);
-            System.out.println("Причина: " + e.getCause());
+            e.initCause(new ManagerSaveException("Критическая ошибка при записи файла задач"));
+            logger.log(Level.SEVERE, "Перехвачено исключение: ", e);
+            logger.log(Level.SEVERE, "Причина: ", e.getCause());
+            fh.close();
         }
     }
 
@@ -317,9 +336,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 a.add(line);
             }
         } catch (IOException e) {
-            e.initCause(new ManagerSaveException());
-            System.out.println("Перехвачено исключение: " + e);
-            System.out.println("Причина: " + e.getCause());
+            e.initCause(new ManagerSaveException("Критическая ошибка при чтении файла задач"));
+            logger.log(Level.SEVERE, "Перехвачено исключение: ", e);
+            logger.log(Level.SEVERE, "Причина: ", e.getCause());
+            fh.close();
         }
         return a;
     }
