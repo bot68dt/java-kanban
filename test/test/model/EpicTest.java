@@ -1,4 +1,4 @@
-package com.yandex.test.model;
+package test.model;
 
 import com.yandex.taskmanager.model.Epic;
 import org.junit.jupiter.api.Test;
