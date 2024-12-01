@@ -22,9 +22,10 @@ public class Managers {
         return taskManager = new FileBackedTaskManager();
     }
 
-    public static TaskManager loadFileManager(String file) {
+    public static TaskManager loadFileManager(String file1, String file2) {
         final String HOME = System.getProperty("user.home");
-        Path testFile = Paths.get(HOME, "Saves", file);
-        return taskManager = new FileBackedTaskManager(testFile);
+        Path testFile1 = Paths.get(HOME, "Saves", file1);
+        Path testFile2 = Paths.get(HOME, "Saves", file2);
+        return taskManager = new FileBackedTaskManager(testFile1, testFile2);
     }
 }

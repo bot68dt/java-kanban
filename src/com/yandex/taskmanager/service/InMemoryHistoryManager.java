@@ -1,5 +1,6 @@
 package com.yandex.taskmanager.service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.yandex.taskmanager.interfaces.HistoryManager;
@@ -144,6 +145,19 @@ public class InMemoryHistoryManager implements HistoryManager {
                 return "Task{" + "name='" + this.data.getName() + '\'' + ", description='" + this.data.getDescription() + '\'' + ", status=" + this.data.getStatus() + ", type=" + this.data.getType() + '}' + '\n';
             }
         }
+    }
+
+    public class SomeClass {
+
+        public static void main(String[] args) {
+            LocalDateTime now = getCurrentLocalDateTime();
+            System.out.println(now);
+        }
+
+        private static LocalDateTime getCurrentLocalDateTime() {
+            return LocalDateTime.now();
+        }
+
     }
 }
 

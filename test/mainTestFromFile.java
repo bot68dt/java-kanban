@@ -1,18 +1,28 @@
 import com.yandex.taskmanager.constant.Status;
+import com.yandex.taskmanager.exceptions.TimeCrossingException;
 import com.yandex.taskmanager.interfaces.HistoryManager;
 import com.yandex.taskmanager.interfaces.TaskManager;
 import com.yandex.taskmanager.model.Task;
 import com.yandex.taskmanager.service.Managers;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-class MainTestFromFile {
+class mainTestFromFile {
 
-    TaskManager taskManager = Managers.loadFileManager("testFile.CSV");
+    TaskManager taskManager = Managers.loadFileManager("testFile.CSV", "testFileSortedByTime.CSV");
     HistoryManager historyManager = Managers.getDefaultHistory();
-    Task task1 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
-    Task task2 = new Task("Test addNewTask", "Test addNewTask description", Status.DONE);
+    Task task1 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW, 1440, "01.11.24 12:15");
+    Task task2 = new Task("Test addNewTask", "Test addNewTask description", Status.DONE, 1440, "03.11.24 12:15");
+
+    @Test
+    void testException() {
+        TimeCrossingException e = assertThrows(TimeCrossingException.class, () -> {
+            Task task3 = new Task("Test addNewTask", "Test addNewTask description", Status.IN_PROGRESS, 1440, "01.11.24 14:15");
+            throw new TimeCrossingException("an exception");
+        }, "exception");
+        assertTrue(e.getMessage().contains("an exception"));
+    }
 
     @Test
     void historyManagerSavesPreviousVersions() {
@@ -29,6 +39,6 @@ class MainTestFromFile {
         taskManager.addTask(task1);
         historyManager.add(taskManager.getTaskById(task1.getId()));
         historyManager.remove(task1.getId());
-        assertEquals(historyManager.getHistory().isEmpty(), true, "Node wasn't deleted");
+        assertTrue(historyManager.getHistory().isEmpty(), "Node wasn't deleted");
     }
 }

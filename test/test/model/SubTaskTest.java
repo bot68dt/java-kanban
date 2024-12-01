@@ -10,8 +10,8 @@ class SubTaskTest {
 
     @Test
     void testEquals() {
-        SubTask task1 = new SubTask("Test addNewTask", "Test addNewTask description", Status.NEW);
-        SubTask task2 = new SubTask("Test addNewTask", "Test addNewTask description", Status.NEW);
+        SubTask task1 = new SubTask("Test addNewTask", "Test addNewTask description", Status.NEW, 1440, "01.11.24 12:15");
+        SubTask task2 = new SubTask("Test addNewTask", "Test addNewTask description", Status.NEW, 1440, "03.11.24 12:15");
         assertEquals(task1.getId(), task2.getId(), "Задачи не совпадают.");
         assertEquals(task1, task2, "Задачи не совпадают.");
     }

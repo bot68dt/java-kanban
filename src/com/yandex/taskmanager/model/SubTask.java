@@ -6,8 +6,8 @@ import com.yandex.taskmanager.constant.Types;
 public class SubTask extends Task {
     private int epicHash;
 
-    public SubTask(String name, String description, Status status) {
-        super(name, description, status);
+    public SubTask(String name, String description, Status status, int duration, String startTime) {
+        super(name, description, status, duration, startTime);
         type = Types.SUBEPIC;
     }
 
@@ -21,9 +21,7 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "SubTask{" +
-                "epicHash=" + epicHash +
-                "} " + super.toString();
+        return "SubTask{" + "epicHash=" + epicHash + "} " + super.toString();
     }
 
     @Override
