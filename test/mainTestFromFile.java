@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class mainTestFromFile {
+class MainTestFromFile {
 
     TaskManager taskManager = Managers.loadFileManager("testFile.CSV", "testFileSortedByTime.CSV");
     HistoryManager historyManager = Managers.getDefaultHistory();

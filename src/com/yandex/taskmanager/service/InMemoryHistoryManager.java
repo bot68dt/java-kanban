@@ -146,18 +146,5 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
         }
     }
-
-    public class SomeClass {
-
-        public static void main(String[] args) {
-            LocalDateTime now = getCurrentLocalDateTime();
-            System.out.println(now);
-        }
-
-        private static LocalDateTime getCurrentLocalDateTime() {
-            return LocalDateTime.now();
-        }
-
-    }
 }
 
