@@ -1,7 +1,6 @@
 package com.yandex;
 
 import com.yandex.taskmanager.constant.Status;
-import com.yandex.taskmanager.exceptions.TimeCrossingException;
 import com.yandex.taskmanager.interfaces.HistoryManager;
 import com.yandex.taskmanager.model.Epic;
 import com.yandex.taskmanager.model.SubTask;
