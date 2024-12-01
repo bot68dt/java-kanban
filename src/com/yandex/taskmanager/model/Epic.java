@@ -9,10 +9,11 @@ public class Epic extends Task {
     private ArrayList<Integer> subTasks;
 
     public Epic(String name, String description) {
-        super(name, description, Status.NEW);
+        super(name, description, Status.NEW, 0, "01.01.01 00:00");
         type = Types.EPIC;
         subTasks = new ArrayList<>();
     }
+
 
     public ArrayList<Integer> getSubTasks() {
         return subTasks;
@@ -45,9 +46,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
-                "subTasks=" + subTasks +
-                "} " + super.toString();
+        return "Epic{" + "subTasks=" + subTasks + "} " + super.toString();
     }
 
     @Override

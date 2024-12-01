@@ -15,8 +15,8 @@ class MainTest {
 
     TaskManager taskManager = Managers.getFileManager();
     HistoryManager historyManager = Managers.getDefaultHistory();
-    Task task1 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
-    Task task2 = new Task("Test addNewTask", "Test addNewTask description", Status.DONE);
+    Task task1 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW, 1440, "01.11.24 12:15");
+    Task task2 = new Task("Test addNewTask", "Test addNewTask description", Status.DONE, 1440, "03.11.24 12:15");
 
     @Test
     void historyManagerSavesPreviousVersions() {

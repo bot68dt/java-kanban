@@ -8,6 +8,7 @@ import com.yandex.taskmanager.model.Task;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface TaskManager {
     void addTask(Task task);
@@ -54,4 +55,5 @@ public interface TaskManager {
 
     int getCount();
 
+    Set<Task> getTimeSort();
 }
