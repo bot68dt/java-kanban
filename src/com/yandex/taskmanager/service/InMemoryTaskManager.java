@@ -5,10 +5,9 @@ import com.yandex.taskmanager.constant.Types;
 import com.yandex.taskmanager.interfaces.TaskManager;
 import com.yandex.taskmanager.model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -22,6 +21,10 @@ public class InMemoryTaskManager implements TaskManager {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
+    }
+
+    public Set<Task> getTimeSort() {
+        return new TreeSet<>();
     }
 
     @Override
@@ -51,32 +54,27 @@ public class InMemoryTaskManager implements TaskManager {
                 object.addSubTasks(subTask.getId());
                 ++count;
                 changeEpicStatus(object);
+                changeEpicTime(object);
             }
         }
     }
 
     @Override
     public List<Task> getTasks() {
-        if (!tasks.isEmpty())
-            return new ArrayList<>(tasks.values());
-        else
-            return new ArrayList<>();
+        if (!tasks.isEmpty()) return new ArrayList<>(tasks.values());
+        else return new ArrayList<>();
     }
 
     @Override
     public List<Epic> getEpics() {
-        if (!epics.isEmpty())
-            return new ArrayList<>(epics.values());
-        else
-            return new ArrayList<>();
+        if (!epics.isEmpty()) return new ArrayList<>(epics.values());
+        else return new ArrayList<>();
     }
 
     @Override
     public List<SubTask> getSubTasks() {
-        if (!subtasks.isEmpty())
-            return new ArrayList<>(subtasks.values());
-        else
-            return new ArrayList<>();
+        if (!subtasks.isEmpty()) return new ArrayList<>(subtasks.values());
+        else return new ArrayList<>();
     }
 
     @Override
@@ -88,26 +86,20 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Map<Integer, Task> getTasksWithId() {
-        if (!tasks.isEmpty())
-            return tasks;
-        else
-            return new HashMap<>();
+        if (!tasks.isEmpty()) return tasks;
+        else return new HashMap<>();
     }
 
     @Override
     public Map<Integer, Epic> getEpicsWithId() {
-        if (!epics.isEmpty())
-            return epics;
-        else
-            return new HashMap<>();
+        if (!epics.isEmpty()) return epics;
+        else return new HashMap<>();
     }
 
     @Override
     public Map<Integer, SubTask> getSubTasksWithId() {
-        if (!subtasks.isEmpty())
-            return subtasks;
-        else
-            return new HashMap<>();
+        if (!subtasks.isEmpty()) return subtasks;
+        else return new HashMap<>();
     }
 
     @Override
@@ -119,6 +111,8 @@ public class InMemoryTaskManager implements TaskManager {
                 for (Epic epic : epics.values()) {
                     epic.delAllSubTasks();
                     epic.setStatus(Status.NEW);
+                    epic.setStartTime(null);
+                    epic.setDuration(Duration.ZERO);
                 }
             }
             case EPIC -> {
@@ -130,12 +124,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        return tasks.getOrDefault(id, new Task(null, null, null));
+        return tasks.getOrDefault(id, new Task(null, null, null, 0, "01.01.01 00:00"));
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        return subtasks.getOrDefault(id, new SubTask(null, null, null));
+        return subtasks.getOrDefault(id, new SubTask(null, null, null, 0, "01.01.01 00:00"));
     }
 
     @Override
@@ -158,6 +152,7 @@ public class InMemoryTaskManager implements TaskManager {
             task.setStatus(status);
             task.setSubTasks(subs);
             task.setId(id);
+            changeEpicTime(task);
             epics.put(id, task);
         }
     }
@@ -169,14 +164,14 @@ public class InMemoryTaskManager implements TaskManager {
             task.setId(id);
             Epic object = changeSubsInEpic(task, epicHash, id);
             changeEpicStatus(object);
+            changeEpicTime(object);
         }
     }
 
     @Override
     public int delTaskById(int id) {
         Task a = tasks.remove(id);
-        if (a != null)
-            return id;
+        if (a != null) return id;
         else return 0;
     }
 
@@ -197,10 +192,10 @@ public class InMemoryTaskManager implements TaskManager {
             subtasks.remove(id);
             epics.get(epicHash).delSubTask(id);
             Epic object = epics.get(epicHash);
-            if (!object.getSubTasks().isEmpty())
+            if (!object.getSubTasks().isEmpty()) {
                 changeEpicStatus(object);
-            else
-                object.setStatus(Status.DONE);
+                changeEpicTime(object);
+            } else object.setStatus(Status.DONE);
             return id;
         }
         return 0;
@@ -211,11 +206,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(id)) {
             ArrayList<SubTask> buffer = new ArrayList<>();
             for (SubTask obj : subtasks.values())
-                if (obj.getEpicHash() == id)
-                    buffer.add(obj);
+                if (obj.getEpicHash() == id) buffer.add(obj);
             return buffer;
-        } else
-            return new ArrayList<>();
+        } else return new ArrayList<>();
     }
 
     public void changeEpicStatus(Epic object) {
@@ -230,12 +223,21 @@ public class InMemoryTaskManager implements TaskManager {
                 case DONE -> done++;
             }
         }
-        if (progress > 0 || !(done == object.getSubTasks().size()))
-            object.setStatus(Status.IN_PROGRESS);
-        else
-            object.setStatus(Status.DONE);
-        if (new1 == object.getSubTasks().size())
-            object.setStatus(Status.NEW);
+        if (progress > 0 || !(done == object.getSubTasks().size())) object.setStatus(Status.IN_PROGRESS);
+        else object.setStatus(Status.DONE);
+        if (new1 == object.getSubTasks().size()) object.setStatus(Status.NEW);
+    }
+
+    public void changeEpicTime(Epic object) {
+        Duration duration = Duration.ZERO;
+        LocalDateTime time = null;
+        for (int i : object.getSubTasks()) {
+            duration = duration.plus(subtasks.get(i).getDuration());
+            LocalDateTime startTime = subtasks.get(i).getStartTime();
+            if (time.isEqual(null) || time.isAfter(startTime)) time = startTime;
+        }
+        object.setDuration(duration);
+        object.setStartTime(time);
     }
 
     public Epic changeSubsInEpic(SubTask task, int epicHash, int id) {
