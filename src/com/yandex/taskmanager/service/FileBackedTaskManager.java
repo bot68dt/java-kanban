@@ -342,7 +342,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     @Override
     public SubTask getSubTaskById(int id) {
-        return subtasks.getOrDefault(id, new SubTask(null, null, null, 0, "01.01.01 00:00"));
+        return Map.copyOf(subtasks).getOrDefault(id, new SubTask(null, null, null, 0, "01.01.01 00:00"));
     }
 
     @Override
@@ -480,12 +480,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             String pattern = "yyyyMMddhhmmss";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             String date = simpleDateFormat.format(new Date());
-            fh = new FileHandler("MyLogFile_" + date + ".log", true);
+            fh = new FileHandler("MyLogFile" + ".log", false);
             logger.addHandler(fh);
             fh.setFormatter(new SimpleFormatter());
             logger.info("Log message");
         } catch (SecurityException | IOException e) {
             logger.log(Level.SEVERE, "Произошла ошибка при работе с FileHandler.", e);
         }
+    }
+
+    public static List<String> loggerPrint() {
+        Path testFile = Paths.get("MyLogFile.log");
+        List<String> list = readWordsFromFile(testFile.toString());
+        return list;
     }
 }

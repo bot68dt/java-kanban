@@ -1,4 +1,4 @@
-package com.yandex;
+/*package com.yandex;
 
 import com.yandex.taskmanager.constant.Status;
 import com.yandex.taskmanager.interfaces.HistoryManager;
@@ -29,7 +29,7 @@ public class Main {
         taskManager.updateSubEpic(1626573417, new SubTask("Поспать", "Полежать на кровати", Status.DONE, 1440, "09.11.24 18:15"));
 
         /*HistoryManager historyManager = Managers.getDefaultHistory();
-        TaskManager taskManager = Managers.loadFileManager("testFile.CSV", "testFileSortedByTime.CSV");*/
+        TaskManager taskManager = Managers.loadFileManager("testFile.CSV", "testFileSortedByTime.CSV");
 
         System.out.println(taskManager.getEpicsWithId());
         System.out.println(taskManager.getSubTasksWithId());
@@ -83,3 +83,4 @@ public class Main {
         }
     }
 }
+*/
