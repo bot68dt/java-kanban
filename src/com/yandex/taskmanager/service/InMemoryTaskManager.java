@@ -8,6 +8,7 @@ import com.yandex.taskmanager.model.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -251,4 +252,8 @@ public class InMemoryTaskManager implements TaskManager {
         return count;
     }
 
+    @Override
+    public Logger getLogger() {
+        return null;
+    }
 }

@@ -8,10 +8,12 @@ import com.yandex.taskmanager.interfaces.TaskManager;
 import com.yandex.taskmanager.model.Epic;
 import com.yandex.taskmanager.model.SubTask;
 import com.yandex.taskmanager.model.Task;
+import com.yandex.taskmanager.service.FileBackedTaskManager;
 import com.yandex.taskmanager.service.Managers;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.logging.Level;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
@@ -54,7 +56,7 @@ public class HttpTaskServer {
 
         httpServer.start();
 
-        System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+        taskManager.getLogger().log(Level.SEVERE, "HTTP-сервер запущен на " + PORT + " порту!");
         //httpServer.stop(1);
     }
 }

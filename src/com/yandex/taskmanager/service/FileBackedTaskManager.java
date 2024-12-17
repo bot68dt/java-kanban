@@ -494,4 +494,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         List<String> list = readWordsFromFile(testFile.toString());
         return list;
     }
+
+    public Logger getLogger() {
+        return this.logger;
+    }
 }
